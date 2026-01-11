@@ -7,10 +7,14 @@ const app: Application = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
+import bookRoutes from './routes/book.routes';
+
 // Basic route to verify setup
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({ message: 'Book Management API is running' });
 });
+
+app.use('/books', bookRoutes);
 
 // Error handling middleware placeholder (will be enhanced later)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
