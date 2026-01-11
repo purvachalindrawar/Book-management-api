@@ -38,4 +38,13 @@ export class BookService {
         books.splice(bookIndex, 1);
         return true;
     }
+
+    public bulkCreate(booksData: Omit<Book, 'id'>[]): number {
+        const newBooks: Book[] = booksData.map(data => ({
+            id: uuidv4(),
+            ...data
+        }));
+        books.push(...newBooks);
+        return newBooks.length;
+    }
 }
