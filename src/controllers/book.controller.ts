@@ -58,4 +58,27 @@ export class BookController {
 
         res.status(204).send();
     }
+
+    public importBooks(req: Request, res: Response): void {
+        if (!req.file) {
+            res.status(400).json({ message: 'No file uploaded' });
+            return;
+        }
+
+        const { CsvParserService } = require('../services/csv-parser.service');
+        const parser = new CsvParserService();
+
+        // req.file.buffer contains the file data in memory
+        const { validBooks, errors } = parser.parseAndValidate(req.file.buffer);
+
+        if (validBooks.length > 0) {
+            bookService.bulkCreate(validBooks);
+        }
+
+        res.status(201).json({
+            message: 'Import process completed',
+            addedCount: validBooks.length,
+            errors: errors
+        });
+    }
 }
